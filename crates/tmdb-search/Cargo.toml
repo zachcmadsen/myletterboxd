@@ -1,0 +1,10 @@
+[package]
+name = "tmdb-search"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.86"
+config = { version = "0.14.0", default-features = false, features = ["toml"] }
+serde = { version = "1.0.203", features = ["derive"] }
+ureq = { version = "2.9.7", default-features = false, features = ["json", "tls"] }
