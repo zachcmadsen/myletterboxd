@@ -1,5 +1,11 @@
+use std::str::FromStr;
+
 use axum::{response::Html, routing::get, Router};
-use sqlx::SqlitePool;
+use sqlx::{
+    pool::PoolOptions,
+    sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePoolOptions},
+    SqlitePool,
+};
 
 async fn hello() -> Html<&'static str> {
     Html("<h1>hello, world</h1>")
@@ -7,7 +13,11 @@ async fn hello() -> Html<&'static str> {
 
 #[tokio::main]
 async fn main() {
-    let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
+    let x = SqliteConnectOptions::from_str("sqlite::memory:")
+        .unwrap()
+        .create_if_missing(true)
+        .journal_mode(SqliteJournalMode::Wal);
+    let pool = SqlitePool::connect_with(x).await.unwrap();
 
     sqlx::query(
         r#"
